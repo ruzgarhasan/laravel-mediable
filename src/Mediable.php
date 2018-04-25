@@ -44,7 +44,7 @@ trait Mediable
     public function media()
     {
         return $this->morphToMany(config('mediable.model'), 'mediable')
-            ->withPivot('tag', 'order')
+            ->withPivot('tag', 'order','alt')
             ->orderBy('order');
     }
 
@@ -165,7 +165,7 @@ trait Mediable
      * @param string|array $tags  One or more tags to define the relation
      * @return void
      */
-    public function attachMedia($media, $tags)
+    public function attachMedia($media, $tags,$alt=NULL)
     {
         $tags = (array) $tags;
         $increments = $this->getOrderValueForTags($tags);
@@ -176,6 +176,7 @@ trait Mediable
             foreach ($ids as $id) {
                 $attach[$id] = [
                     'tag' => $tag,
+                    'alt' => $alt,
                     'order' => ++$increments[$tag],
                 ];
             }
@@ -191,10 +192,10 @@ trait Mediable
      * @param string|array $tags
      * @return void
      */
-    public function syncMedia($media, $tags)
+    public function syncMedia($media, $tags,$alt=NULL)
     {
         $this->detachMediaTags($tags);
-        $this->attachMedia($media, $tags);
+        $this->attachMedia($media, $tags,$alt);
     }
 
     /**
@@ -547,7 +548,7 @@ trait Mediable
         // Laravel 5.5
         if (method_exists($relation, 'getQualifiedRelatedPivotKeyName')) {
             return $relation->getQualifiedRelatedPivotKeyName();
-        // Laravel 5.4
+            // Laravel 5.4
         } elseif (method_exists($relation, 'getQualifiedRelatedKeyName')) {
             return $relation->getQualifiedRelatedKeyName();
         }
