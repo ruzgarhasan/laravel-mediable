@@ -32,8 +32,8 @@
     "autoload-dev":{
         "classmap": ["tests/", "migrations/"]
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true,
+    "minimum-stability": "dev",
+    "prefer-stable": false,
     "extra": {
         "laravel": {
             "providers": [
